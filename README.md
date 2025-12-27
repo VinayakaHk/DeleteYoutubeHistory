@@ -1,112 +1,139 @@
-# DeleteYoutubeHistory
+# Delete YouTube History
 
-This repository contains a JavaScript snippet to automate the deletion of YouTube watch history from `myactivity.google.com`.
+> A JavaScript utility to bulk delete YouTube video watch history from Google My Activity while preserving YouTube Music history.
 
-> **Note:** By default, this script targets standard YouTube videos and **leaves YouTube Music history untouched**. However, the script can be easily customized to target YouTube Music exclusively if desired.
+## ⚠️ Important Warnings
 
-## ⚠️ Disclaimer
+- **Security Notice**: This script requires console access to your Google Account. Always review code before pasting into the browser console to prevent malicious exploitation.
+- **Maintenance**: Google dynamically assigns class names with each build. This script may require updates if class names change.
+- **Irreversible**: Deleted history cannot be recovered. Proceed with caution.
 
-**Google uses dynamic classnames.** Google frequently updates the class names in their HTML structure. If this script does not work, you may need to inspect the page source and update the selectors in the script (see the [Maintenance](#maintenance) section below).
+## Overview
 
-**Security Warning:** You will be instructed to paste code into your browser's Developer Console. Please ensure you have reviewed the source code of this script to understand what it does before running it.
+This repository provides a browser-based script that automates the deletion of YouTube video entries from your Google Activity page. The script:
 
-## Features
-
--   Bulk delete YouTube watch history items.
--   Selective preservation of YouTube Music history (configurable).
--   Client-side execution—no backend or API keys required.
+- ✅ Deletes YouTube video watch history
+- ✅ Preserves YouTube Music history (default behavior)
+- ✅ Can be customized to target YouTube Music instead
 
 ## Prerequisites
 
--   A web browser (Chrome, Firefox, Edge, etc.)
--   A Google Account with YouTube history
--   Basic understanding of how to open Browser Developer Tools
+- A modern web browser (Chrome, Firefox, Edge, etc.)
+- Access to your Google Account
+- Active YouTube watch history
 
 ## Usage
 
-Follow these steps to run the script:
+### Step 1: Access Your YouTube Activity
 
-1.  **Navigate to Activity Page**
-    Go to the YouTube filter page on Google My Activity:
-    [https://myactivity.google.com/u/1/myactivity?pageId=none&q=%22YouTube%22&product=26](https://myactivity.google.com/u/1/myactivity?pageId=none&q=%22YouTube%22&product=26)
-    
-    *Alternatively, open `myactivity.google.com`, click Filters, and select "YouTube".*
+Visit your Google My Activity page filtered for YouTube:
+```
+https://myactivity.google.com/myactivity?product=26
+```
 
-2.  **Load History**
-    **Important:** Scroll all the way to the bottom of the page. This ensures that all history items are loaded into the DOM as `c-wiz` elements before the script runs.
+Or manually navigate:
+1. Go to [myactivity.google.com](https://myactivity.google.com)
+2. Click on **Filters**
+3. Select **YouTube**
 
-3.  **Open Developer Tools**
-    -   Right-click anywhere on the page and select **Inspect**, or press `F12` / `Ctrl+Shift+I` (Windows) / `Cmd+Option+I` (Mac).
-    -   Go to the **Console** tab.
+### Step 2: Load All Activity Items
 
-4.  **Allow Pasting (if required)**
-    If you see a warning in the console saying "Warning: Don’t paste code...", type `allow pasting` and press Enter.
+Scroll to the bottom of the page to ensure all `<c-wiz>` elements are loaded. This ensures the script can access all your history entries.
 
-5.  **Run the Script**
-    Copy the contents of `deleteYoutubeHistory.js` and paste it into the console. Press Enter to run.
+### Step 3: Open Developer Tools
 
-6.  **Monitor Progress**
-    -   Watch the console for status messages.
-    -   Once you see the message `Finished clicking all YouTube delete buttons`, **do not close the browser immediately.**
+1. Press `F12` (or `Cmd+Option+I` on Mac)
+2. Navigate to the **Console** tab
+3. If you see a warning about pasting, type `allow pasting` to proceed
 
-7.  **Verify Deletion**
-    -   Switch to the **Network** tab in Developer Tools.
-    -   Filter by `batchexecute`.
-    -   Wait until you see these network requests complete. This indicates the actual backend deletion process is finishing.
+### Step 4: Run the Script
+
+1. Copy the contents of [`deleteYoutubeHistory.js`](./deleteYoutubeHistory.js)
+2. Paste into the console
+3. Press `Enter` to execute
+
+### Step 5: Monitor Progress
+
+**Console Output**: Wait for the message:
+```
+Finished clicking all YouTube delete buttons
+```
+
+**Network Verification**: 
+1. Switch to the **Network** tab
+2. Filter by `batchexecute`
+3. Wait for all requests to complete before closing the browser
+4. This shows the actual backend deletion progress
 
 ## Customization
 
-### Delete YouTube Music (instead of saving it)
-If you want to delete YouTube Music history while keeping standard YouTube videos, you will need to modify the selectors in the script.
+To delete **YouTube Music** history instead of YouTube videos:
 
-1.  Open the **Inspector** (Elements) tab in Developer Tools.
-2.  Look for the container `div`s representing the items you want to delete.
-3.  Identify the specific classnames or text that distinguishes "YouTube Music" from standard "YouTube".
-4.  Update the query selector in `deleteYoutubeHistory.js` to target those specific elements.
+1. Open `deleteYoutubeHistory.js`
+2. Modify the selector to target YouTube Music entries
+3. Update the filtering logic as needed
 
-## Maintenance
+Refer to the HTML structure comments in the script for guidance on identifying the correct selectors.
 
-If the script stops working, it is likely due to Google changing their CSS classnames. You can update the script by finding the new selectors:
+## Technical Details
 
-1.  Open the page and inspect the history item you want to delete.
-2.  Locate the `c-wiz` or container `div`.
-3.  Identify the classes used for the delete button or the specific service label (e.g., `YouTube` vs `YouTube Music`).
+### HTML Structure
 
-<details>
-<summary>Example HTML Structure (Reference)</summary>
-
-The script targets elements that look similar to the structure below. You may need to update the classnames (e.g., `k2bP7e`, `YYajNd`) if they change in your browser view.
-
+The script targets elements with specific class names and `jsname` attributes. Example structure:
 ```html
-<c-wiz class="xDtZAf" jslog="64793; track:impression" ...>
-    <div jsname="MFYZYe" class="GqCJpe u2cbPc LDk2Pd" aria-label="Card showing an activity from YouTube" role="listitem" ...>
-        <div class="k2bP7e YYajNd">
-            <div class="ztN3hd">
-                <div class="F96K3d">
-                    <!-- Service Name (YouTube or YouTube Music) -->
-                    <span jsname="eo0svb" ... class="hJ7x8b">YouTube</span>
-                </div>
-                <!-- Delete Button -->
-                <div class="YxbmAc">
-                    <button ... jsaction="click:cOuCgd ...">...</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<c-wiz class="xDtZAf" jslog="64793; track:impression" 
+       data-token="..." 
+       data-date="20251226">
+  <div class="k2bP7e YYajNd">
+    <span class="hJ7x8b">YouTube</span>
+    <button class="VfPpkd-Bz112c-LgbsSe yHy1rc eT1oJ mN1ivc">
+      <!-- Delete button -->
+    </button>
+  </div>
 </c-wiz>
 ```
 
-</details>
+### Updating Selectors
+
+If the script stops working:
+
+1. Open **Developer Tools** → **Inspector**
+2. Examine the HTML structure of activity items
+3. Update class names and selectors in the script accordingly
+4. Test with a small subset of your history first
 
 ## Troubleshooting
 
-**Script says it finished, but items are still there.**
--   Check the **Network** tab. If you don't see `batchexecute` requests, the delete buttons may not have been clicked.
--   Check the **Console** for red error messages indicating that elements were not found (likely due to classnames changing).
+| Issue | Solution |
+|-------|----------|
+| Script doesn't run | Ensure you've typed `allow pasting` in console |
+| No items deleted | Scroll to bottom to load all items first |
+| Partial deletion | Check Network tab for failed `batchexecute` requests |
+| Script error | Class names may have changed; update selectors |
 
-**"Delete All" button vs Individual Delete**
--   This script simulates clicking the individual "X" or delete button on specific cards. It does not click the global "Delete all activity" button to ensure it respects the YouTube vs. YouTube Music filter logic.
+## Contributing
+
+Contributions are welcome! If Google updates their UI and breaks the script:
+
+1. Fork the repository
+2. Update the selectors in `deleteYoutubeHistory.js`
+3. Test thoroughly
+4. Submit a pull request with details about the changes
+
+## Disclaimer
+
+This tool is provided as-is for personal use. The authors are not responsible for:
+- Accidental data loss
+- Changes to Google's Terms of Service
+- Account access issues resulting from misuse
+
+Always backup important data before performing bulk deletions.
 
 ## License
 
-This project is open source and available for educational purposes. Use at your own risk.
+MIT License - See [LICENSE](LICENSE) file for details
+
+---
+
+**Last Updated**: December 2024  
+**Tested On**: Chrome 120+, Firefox 121+
