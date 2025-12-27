@@ -135,5 +135,4 @@ MIT License - See [LICENSE](LICENSE) file for details
 
 ---
 
-**Last Updated**: December 2024  
-**Tested On**: Chrome 120+, Firefox 121+
+**Last Updated**: December 2025  
