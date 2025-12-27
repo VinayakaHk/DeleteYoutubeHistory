@@ -1,39 +1,112 @@
 # DeleteYoutubeHistory
 
+This repository contains a JavaScript snippet to automate the deletion of YouTube watch history from `myactivity.google.com`.
 
-This repository exists to delete all youtube videos from myactivity.google.com. This wont delete YouTube Music Videos and will leave them untouched. 
+> **Note:** By default, this script targets standard YouTube videos and **leaves YouTube Music history untouched**. However, the script can be easily customized to target YouTube Music exclusively if desired.
 
-This script might not work in the near future as google assigns their classnames dynamically with each build. So The classnames might need to be updated if this script is being run periodically. 
+## ⚠️ Disclaimer
 
-This script can also be customised to only delete Youtube Music videos leaving Youtube videos intact. 
+**Google uses dynamic classnames.** Google frequently updates the class names in their HTML structure. If this script does not work, you may need to inspect the page source and update the selectors in the script (see the [Maintenance](#maintenance) section below).
 
-In order to run this script,  first open https://myactivity.google.com , click on filters and only select Youtube
+**Security Warning:** You will be instructed to paste code into your browser's Developer Console. Please ensure you have reviewed the source code of this script to understand what it does before running it.
 
-or you can click on this link
+## Features
 
-https://myactivity.google.com/u/1/myactivity?pageId=none&q=%22YouTube%22&product=26
+-   Bulk delete YouTube watch history items.
+-   Selective preservation of YouTube Music history (configurable).
+-   Client-side execution—no backend or API keys required.
 
-Open Developer tools, go to Inspector, The classnames are visible in the source. 
+## Prerequisites
 
+-   A web browser (Chrome, Firefox, Edge, etc.)
+-   A Google Account with YouTube history
+-   Basic understanding of how to open Browser Developer Tools
+
+## Usage
+
+Follow these steps to run the script:
+
+1.  **Navigate to Activity Page**
+    Go to the YouTube filter page on Google My Activity:
+    [https://myactivity.google.com/u/1/myactivity?pageId=none&q=%22YouTube%22&product=26](https://myactivity.google.com/u/1/myactivity?pageId=none&q=%22YouTube%22&product=26)
+    
+    *Alternatively, open `myactivity.google.com`, click Filters, and select "YouTube".*
+
+2.  **Load History**
+    **Important:** Scroll all the way to the bottom of the page. This ensures that all history items are loaded into the DOM as `c-wiz` elements before the script runs.
+
+3.  **Open Developer Tools**
+    -   Right-click anywhere on the page and select **Inspect**, or press `F12` / `Ctrl+Shift+I` (Windows) / `Cmd+Option+I` (Mac).
+    -   Go to the **Console** tab.
+
+4.  **Allow Pasting (if required)**
+    If you see a warning in the console saying "Warning: Don’t paste code...", type `allow pasting` and press Enter.
+
+5.  **Run the Script**
+    Copy the contents of `deleteYoutubeHistory.js` and paste it into the console. Press Enter to run.
+
+6.  **Monitor Progress**
+    -   Watch the console for status messages.
+    -   Once you see the message `Finished clicking all YouTube delete buttons`, **do not close the browser immediately.**
+
+7.  **Verify Deletion**
+    -   Switch to the **Network** tab in Developer Tools.
+    -   Filter by `batchexecute`.
+    -   Wait until you see these network requests complete. This indicates the actual backend deletion process is finishing.
+
+## Customization
+
+### Delete YouTube Music (instead of saving it)
+If you want to delete YouTube Music history while keeping standard YouTube videos, you will need to modify the selectors in the script.
+
+1.  Open the **Inspector** (Elements) tab in Developer Tools.
+2.  Look for the container `div`s representing the items you want to delete.
+3.  Identify the specific classnames or text that distinguishes "YouTube Music" from standard "YouTube".
+4.  Update the query selector in `deleteYoutubeHistory.js` to target those specific elements.
+
+## Maintenance
+
+If the script stops working, it is likely due to Google changing their CSS classnames. You can update the script by finding the new selectors:
+
+1.  Open the page and inspect the history item you want to delete.
+2.  Locate the `c-wiz` or container `div`.
+3.  Identify the classes used for the delete button or the specific service label (e.g., `YouTube` vs `YouTube Music`).
+
+<details>
+<summary>Example HTML Structure (Reference)</summary>
+
+The script targets elements that look similar to the structure below. You may need to update the classnames (e.g., `k2bP7e`, `YYajNd`) if they change in your browser view.
+
+```html
+<c-wiz class="xDtZAf" jslog="64793; track:impression" ...>
+    <div jsname="MFYZYe" class="GqCJpe u2cbPc LDk2Pd" aria-label="Card showing an activity from YouTube" role="listitem" ...>
+        <div class="k2bP7e YYajNd">
+            <div class="ztN3hd">
+                <div class="F96K3d">
+                    <!-- Service Name (YouTube or YouTube Music) -->
+                    <span jsname="eo0svb" ... class="hJ7x8b">YouTube</span>
+                </div>
+                <!-- Delete Button -->
+                <div class="YxbmAc">
+                    <button ... jsaction="click:cOuCgd ...">...</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</c-wiz>
 ```
-<div jsname="bN97Pc" role="list">
 
-<div jsname="i6CNtf" jscontroller="IcmULc" jslog="64845; track:impression" class="CW0isc KpksOc" data-timestamp="1766801230524" data-date="20251227"><div class="YkIxob"><div class="MCZgpb"><h2 class="rp10kf">Today</h2><div class="iM6vT" jsaction="JIbuQc:FhRcwc;"><button class="VfPpkd-Bz112c-LgbsSe yHy1rc eT1oJ mN1ivc" jscontroller="soHxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;mlnRJb:fLiPzd;" jsname="E0u0jd" data-disable-idom="true" aria-label="Delete all activity from Today." data-timestamp="1766801230524" data-date="20251227" jslog="69590; 4:WzNd; track:JIbuQc"><div jsname="s3Eaab" class="VfPpkd-Bz112c-Jh9lGc"></div><div class="VfPpkd-Bz112c-J1Ukfc-LhBDec"></div><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="DI7Mnf NMm5M"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></button></div></div><div class="RDsffd"><svg width="20" height="20" viewBox="0 0 24 24" focusable="false" class="GABQrf NMm5M" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path><circle cx="7" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="17" cy="12" r="1.5"></circle></svg><span class="Kg5otc">Some activity may not appear yet</span></div></div></div>
+</details>
 
-<c-wiz class="xDtZAf" jslog="64793; track:impression" data-token="AODP23YAAAAiUiAIHRCAtP2l8duRAxjiy9jm19yRAzoKCMHq4u7EvrCcXEhgC3lO8Y1uuUHZm_4U0Qe7q6UH" data-date="20251227" data-show-delete-individual="true" data-hide-ads="false" jsshadow="" jsdata="deferred-c1" data-p="%.@.[[],null,null,null,[[26]]],1]" jscontroller="Dlfr9" jsaction="zKRotf:EiRydc;Mipord:N80UCe;" jsname="Ttx95" jsmodel="hc6Ubd UEAmlc" c-wiz=""><div jsname="MFYZYe" class="GqCJpe u2cbPc LDk2Pd" aria-label="Card showing an activity from YouTube Music" role="listitem" tabindex="-1"><div class="k2bP7e YYajNd"><div class="ztN3hd"><div class="F96K3d"><div class="AYReXd"><img jsname="NTz3Fd" src="https://www.gstatic.com/images/branding/product/2x/youtube_2024_q4_24dp.png" jsaction="error:Lbg96b" height="18" class="sPW8R" alt="Logo for YouTube Music" data-iml="2373"></div><span jsname="eo0svb" jsaction="click:N80UCe" jslog="64799; track:click" class="hJ7x8b">YouTube Music</span></div><div class="YxbmAc"><div jscontroller="Fs3gzb" jsaction="JIbuQc:znXRnd;"><button class="VfPpkd-Bz112c-LgbsSe yHy1rc eT1oJ mN1ivc" jscontroller="soHxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;mlnRJb:fLiPzd;" data-disable-idom="true" aria-label="" jslog="114566; 4:WzFd; track:click;"><div jsname="s3Eaab" class="VfPpkd-Bz112c-Jh9lGc"></div><div class="VfPpkd-Bz112c-J1Ukfc-LhBDec"></div><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="TjcpUd NMm5M"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></button></div></div></div><div class="gWevEe"><div class="uUy2re"><div class="QTGV3c" jsname="r4nke" tabindex="-1">Watched <a href="https://music.youtube.com/watch?v= &amp;authuser=1" jslog="64803; track:click" jsname="eLJrl" class="l8sGWb" target="_blank" rel="noopener noreferrer" aria-label=""><span class="hFYxqd" style="--icon-url: url(&quot;https://www.gstatic.com/identity/identitycommonuicomponents/open_in_new_ad34ae6c0952c4f9bd6d09f1b464222b.svg&quot;)"></span></a></div><div class="SiEggd"><a href="https://www.youtube.com/channel/?authuser=1" jslog="64804; track:click; index:0" jsname="BLHFSc" target="_blank" rel="noopener noreferrer" aria-label="Glass Animals - Topic (Opens in new tab)"><span class="hFYxqd" style="--icon-url: url(&quot;https://www.gstatic.com/identity/identitycommonuicomponents/open_in_new_ad34ae6c0952c4f9bd6d09f1b464222b.svg&quot;)">Glass Animals - Topic</span></a></div><div jsaction="click:N80UCe" jsname="vjl09e" jslog="64798; track:click" class="wlgrwd"><div class="H3Q9vf XTnvW">7:37 AM • <a class="WFTFcf" tabindex="0" role="button" aria-label="Open details of activity &quot;Watched&quot;">Details</a></div></div></div><div class="iXL6O"><a href="https://music.youtube.com/watch?v= &amp;authuser=1" jslog="65086; track:click" jsname="pMSZnb" class="l8sGWb" target="_blank" aria-label="Play video" rel="noopener noreferrer"><div class="OUPWA"><img class="M1gnGc" src="https://i.ytimg.com/vi/ /mqdefault.jpg?at=ABxK-KC4BMoKKWQWX7flXHnn0W6T%3A1766801314156" alt="" data-iml="2715"><div class="tLpIEf"><svg width="36" height="36" viewBox="0 0 24 24" focusable="false" class="IVR0f NMm5M"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"></path></svg></div><div class="bI9urf" aria-label="Video duration">3:59</div><div class="FY2Uwb"></div><div class="HmLFgd" style="width:10%"></div></div></a></div></div></div></div><c-data id="c1" jsdata=" z70ilf;AODP23YAAAAiUiAIHRCAtP2l8duRAxjiy9jm19yRAzoKCMHq4u7EvrCcXEhgC3lO8Y1uuUHZm_4U0Qe7q6UH;$0"></c-data></c-wiz>
+## Troubleshooting
 
-<div jsname="i6CNtf" jscontroller="IcmULc" jslog="64845; track:impression" class="CW0isc KpksOc" data-timestamp="1766749181159" data-date="20251226"><div class="YkIxob"><div class="MCZgpb"><h2 class="rp10kf">Yesterday</h2><div class="iM6vT" jsaction="JIbuQc:FhRcwc;"><button class="VfPpkd-Bz112c-LgbsSe yHy1rc eT1oJ mN1ivc" jscontroller="soHxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;mlnRJb:fLiPzd;" jsname="E0u0jd" data-disable-idom="true" aria-label="Delete all activity from Yesterday." data-timestamp="1766749181159" data-date="20251226" jslog="69590; 4:WzNd; track:JIbuQc"><div jsname="s3Eaab" class="VfPpkd-Bz112c-Jh9lGc"></div><div class="VfPpkd-Bz112c-J1Ukfc-LhBDec"></div><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="DI7Mnf NMm5M"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></button></div></div></div></div>
+**Script says it finished, but items are still there.**
+-   Check the **Network** tab. If you don't see `batchexecute` requests, the delete buttons may not have been clicked.
+-   Check the **Console** for red error messages indicating that elements were not found (likely due to classnames changing).
 
+**"Delete All" button vs Individual Delete**
+-   This script simulates clicking the individual "X" or delete button on specific cards. It does not click the global "Delete all activity" button to ensure it respects the YouTube vs. YouTube Music filter logic.
 
-<c-wiz class="xDtZAf" jslog="64793; track:impression" data-token="AODP23YAAABGUiEIHRCA9J-3r9mRAxj_s_2l8duRAzoLCILx2KKOmpy1vAFSIQgdEID0n7ev2ZEDGP-z_aXx25EDOgsIgvHYoo6anLW8AYylAgzWmGtun0wcBk5_E_nmNdBc" data-date="20251226" data-show-delete-individual="true" data-hide-ads="false" jsshadow="" jsdata="deferred-c5" data-p="%.@.[[],null,null,null,[[26]]],1]" jscontroller="Dlfr9" jsaction="zKRotf:EiRydc;Mipord:N80UCe;" jsname="Ttx95" jsmodel="hc6Ubd UEAmlc" c-wiz=""><div jsname="MFYZYe" class="GqCJpe u2cbPc LDk2Pd" aria-label="Card showing an activity from YouTube" role="listitem" tabindex="-1"><div class="k2bP7e YYajNd"><div class="ztN3hd"><div class="F96K3d"><div class="AYReXd"><img jsname="NTz3Fd" src="https://www.gstatic.com/images/branding/product/2x/youtube_2024_q4_24dp.png" jsaction="error:Lbg96b" height="18" class="sPW8R" alt="Logo for YouTube" data-iml="2372"></div><span jsname="eo0svb" jsaction="click:N80UCe" jslog="64799; track:click" class="hJ7x8b">YouTube</span></div><div class="YxbmAc"><div jscontroller="Fs3gzb" jsaction="JIbuQc:znXRnd;"><button class="VfPpkd-Bz112c-LgbsSe yHy1rc eT1oJ mN1ivc" jscontroller="soHxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;mlnRJb:fLiPzd;" data-disable-idom="true" aria-label="" jslog="114566; 4:WzFd; track:click;"><div jsname="s3Eaab" class="VfPpkd-Bz112c-Jh9lGc"></div><div class="VfPpkd-Bz112c-J1Ukfc-LhBDec"></div><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="TjcpUd NMm5M"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg></button></div></div></div><div class="gWevEe"><div class="uUy2re"><div class="QTGV3c" jsname="r4nke" tabindex="-1">Watched <a href="https://www.youtube.com/watch?v=&amp;authuser=1" jslog="64803; track:click" jsname="eLJrl" class="l8sGWb" target="_blank" rel="noopener noreferrer" aria-label=""><span class="hFYxqd" style="--icon-url: url(&quot;https://www.gstatic.com/identity/identitycommonuicomponents/open_in_new_ad34ae6c0952c4f9bd6d09f1b464222b.svg&quot;)"></span></a></div><div class="SiEggd"><a href="https://www.youtube.com/channel/?authuser=1" jslog="64804; track:click; index:0" jsname="BLHFSc" target="_blank" rel="noopener noreferrer" aria-label="Think Station (Opens in new tab)"><span class="hFYxqd" style="--icon-url: url(&quot;https://www.gstatic.com/identity/identitycommonuicomponents/open_in_new_ad34ae6c0952c4f9bd6d09f1b464222b.svg&quot;)">Think Station</span></a></div><div jsaction="click:N80UCe" jsname="vjl09e" jslog="64798; track:click" class="wlgrwd"><div class="H3Q9vf XTnvW">5:09 PM • <a class="WFTFcf" tabindex="0" role="button" aria-label="">Details</a></div></div></div><div class="iXL6O"><a href="https://www.youtube.com/watch?v=&amp;authuser=1" jslog="65086; track:click" jsname="pMSZnb" class="l8sGWb" target="_blank" aria-label="" rel="noopener noreferrer"><div class="OUPWA"><img class="M1gnGc" src="https://i.ytimg.com/vi//mqdefault.jpg?at=ABxK-KC4BMoKKWQWX7flXHnn0W6T%3A1766801314156" alt="" data-iml="2809"><div class="tLpIEf"><svg width="36" height="36" viewBox="0 0 24 24" focusable="false" class="IVR0f NMm5M"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"></path></svg></div><div class="bI9urf" aria-label="Video duration">0:21</div></div></a></div></div></div></div><c-data id="c5" jsdata=" z70ilf;AODP23YAAABGUiEIHRCA9J-3r9mRAxj_s_2l8duRAzoLCILx2KKOmpy1vAFSIQgdEID0n7ev2ZEDGP-z_aXx25EDOgsIgvHYoo6anLW8AYylAgzWmGtun0wcBk5_E_nmNdBc;$4"></c-data></c-wiz>
-```
+## License
 
-This source might change in the near future and you have to update the script accordingly.
-
-Scroll all the way to the bottom to get all the c-wiz elements loaded. 
-
-Copy the script `deleteYoutubeHistory.js` and paste it in the console tab. If you get a warning saying you cannot paste, then type `allow pasting`  and proceed.  (This is a legitimate warning, please read the source code carefully before pasting as mallicious code can be exploited by hackers to gain access to your google account. 
-
-Run the code and wait for the script to finish. You can check the status of the script in console. Yet, after the script executes and you get the message `Finished clicking all YouTube delete buttons` Donot terminate the browser, go to `Networks` Tab and filter `batchexecute` 
-
-this is the acutal delete progress that is happening in the backend. wait for all the popups to complete and then the script is complete. 
+This project is open source and available for educational purposes. Use at your own risk.
